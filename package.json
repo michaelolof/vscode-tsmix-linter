@@ -1,0 +1,54 @@
+{
+  "name": "vscode-tsmix-linter",
+  "displayName": "TypeScript Mix Linter",
+  "description": "A VSCode Extension intellisense provider for the typescript-mix library",
+  "version": "1.0.0",
+  "author": "Michael Olofinjana",
+  "publisher": "michaelolof",
+  "repository": "git+https://github.com/michaelolof/vscode-tsmix-linter.git",
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "TypeScript",
+    "Linters",
+    "TypeScript Mix",
+    "TypeScript Mix Linter"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "typescript",
+        "aliases": [
+          "TypeScript",
+          "typescript",
+          "Typescript"
+        ],
+        "extensions": [
+          ".ts"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.6.1",
+    "vscode": "^1.1.6",
+    "@types/node": "^7.0.43",
+    "@types/mocha": "^2.2.42"
+  },
+  "dependencies": {
+    "tsmix-linter": "git+https://github.com/michaelolof/tsmix-linter.git"
+  }
+}
