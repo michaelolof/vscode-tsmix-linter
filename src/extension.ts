@@ -32,7 +32,7 @@ export function activate(context: ExtensionContext ) {
 		let workspaceFolders = workspace.workspaceFolders
 		if( workspaceFolders ) {
 			const rootPath = workspaceFolders[0].uri.fsPath;
-			App.launchWatcher( rootPath, builderProgram => {
+			App.watchFilesInFolder( rootPath, builderProgram => {
 				hasBeenInitialized = true;
 				if( App.rootFiles ) {
 					program = builderProgram
@@ -41,7 +41,13 @@ export function activate(context: ExtensionContext ) {
 				}
 			})
 		} else {
-			App.launchCompiler( activeTextEditor.document.fileName ).then( doneValidating )
+			App.watchFile( activeTextEditor.document.fileName, builderProgram => {
+				if( App.rootFiles ) {
+					program = builderProgram
+					rootFiles = App.rootFiles
+					validateAll( program.getProgram(), App.rootFiles ).then( doneValidating );
+				}
+			})
 		}
 
 	});
