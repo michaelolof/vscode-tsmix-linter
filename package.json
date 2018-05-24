@@ -11,10 +11,7 @@
   },
   "categories": [
     "Programming Languages",
-    "TypeScript",
-    "Linters",
-    "TypeScript Mix",
-    "TypeScript Mix Linter"
+    "Linters"
   ],
   "activationEvents": [
     "onLanguage:typescript"
