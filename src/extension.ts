@@ -41,11 +41,11 @@ export function activate(context: ExtensionContext ) {
 				}
 			})
 		} else {
-			App.watchFile( activeTextEditor.document.fileName, builderProgram =>  {
+			App.watchFile( activeTextEditor.document.fileName, builderProgram => {
 				if( App.rootFiles ) {
-					program = builderProgram;
-					rootFiles = App.rootFiles;
-					validateAll( builderProgram.getProgram(), App.rootFiles ).then( doneValidating )
+					program = builderProgram
+					rootFiles = App.rootFiles
+					validateAll( program.getProgram(), App.rootFiles ).then( doneValidating );
 				}
 			})
 		}
