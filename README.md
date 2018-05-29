@@ -1,4 +1,4 @@
-# tsmix-linter README
+# TypeScript Mix Linter
 
 This extension is a linter for vscode to extends typescript's and typescript-mix functionality.
 
