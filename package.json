@@ -2,7 +2,7 @@
   "name": "vscode-tsmix-linter",
   "displayName": "TypeScript Mix Linter",
   "description": "A VSCode Extension intellisense provider for the typescript-mix library",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "Michael Olofinjana",
   "publisher": "michaelolof",
   "repository": "git+https://github.com/michaelolof/vscode-tsmix-linter.git",
@@ -46,6 +46,6 @@
     "@types/mocha": "^2.2.42"
   },
   "dependencies": {
-    "tsmix-linter": "^1.2.0"
+    "tsmix-linter": "^1.3.0"
   }
 }
