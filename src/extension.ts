@@ -2,7 +2,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import { window, workspace, ExtensionContext, languages } from 'vscode';
-import { checkIfFileIsUsingLibrary, App, validateAll, constants } from "tsmix-linter";
+import { checkIfFileIsUsingLibrary, App, constants } from "tsmix-linter";
 import { Diagnostic,} from 'ts-parser';
 import { BuilderProgram, } from 'typescript';
 
@@ -11,7 +11,7 @@ import { BuilderProgram, } from 'typescript';
 export function activate(context: ExtensionContext ) {
 
 	let allDiagnostics:Diagnostic[] = [];
-	let hasBeenInitialized = false;
+	let linterHasBeenInitialized = false;
 	const diagnosticCollection = languages.createDiagnosticCollection( constants.appName );
 	let program:BuilderProgram|undefined = undefined;
 	let rootFiles:string[]|undefined;
@@ -24,7 +24,7 @@ export function activate(context: ExtensionContext ) {
 		const isUsingTSMixLibrary = await checkIfFileIsUsingLibrary( activeTextEditor.document.fileName, activeTextEditor.document.getText() )
 		if( isUsingTSMixLibrary === false ) return;
 
-		if( hasBeenInitialized === true ) {
+		if( linterHasBeenInitialized ) {
 			if( program && rootFiles ) doneValidating( allDiagnostics );
 			return;
 		};
@@ -32,22 +32,9 @@ export function activate(context: ExtensionContext ) {
 		let workspaceFolders = workspace.workspaceFolders
 		if( workspaceFolders ) {
 			const rootPath = workspaceFolders[0].uri.fsPath;
-			App.watchFilesInFolder( rootPath, builderProgram => {
-				hasBeenInitialized = true;
-				if( App.rootFiles ) {
-					program = builderProgram
-					rootFiles = App.rootFiles
-					validateAll( builderProgram.getProgram(), App.rootFiles ).then( doneValidating );
-				}
-			})
+			return App.watchFilesInFolder( rootPath, doneValidating );
 		} else {
-			App.watchFile( activeTextEditor.document.fileName, builderProgram => {
-				if( App.rootFiles ) {
-					program = builderProgram
-					rootFiles = App.rootFiles
-					validateAll( program.getProgram(), App.rootFiles ).then( doneValidating );
-				}
-			})
+			return App.watchFile( activeTextEditor.document.fileName, doneValidating )
 		}
 
 	});
@@ -56,7 +43,12 @@ export function activate(context: ExtensionContext ) {
 
 	function doneValidating(diagnostics:Diagnostic[]) {
 		allDiagnostics = diagnostics;
-		if( allDiagnostics.length === 0 ) return;
+		
+		if( allDiagnostics.length === 0 ) { 
+			diagnosticCollection.clear();
+			return;
+		}
+
 		workspace.textDocuments.forEach( document => {
 			const diagnostic = allDiagnostics.filter( diagnostic => {
 				diagnostic.severity = 0;
@@ -67,8 +59,6 @@ export function activate(context: ExtensionContext ) {
 	}
 
 }
-
-
 
 // this method is called when your extension is deactivated
 export function deactivate() {
